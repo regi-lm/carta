@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Carta</title>
+
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Great+Vibes&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/responsivo.css" />
+  </head>
+
+  <body>
+    <!-- Fundo de corações -->
+    <div class="heart-rain" id="heartRain" aria-hidden="true"></div>
+
+    <main class="wrap">
+      <section class="panel" role="region" aria-label="Carta com senha">
+        <header>
+          <h1>
+            Uma carta só pra você
+            <h2>Mas… só abre com a senha certa 😏</h2>
+          </h1>
+        </header>
+
+        <div class="stage">
+          <div class="envelope-shell" id="shell">
+            <div class="envelope" id="envelope" aria-label="Envelope">
+              <div class="env-front"></div>
+              <div class="flap"></div>
+
+              <!-- Carta -->
+              <article
+                class="letter"
+                id="letter"
+                aria-label="Conteúdo da carta"
+              >
+                <div class="paper">
+                  <h2>Oii, meu amor, minha braba...</h2>
+                  <p>
+                    12/02/23 (a senha do teu celular)... essa data sempre vai
+                    ficar marcada pelo início da gente. ❤️
+                  </p>
+                  <p>
+                    Não quero te "comprar" com tudo isso porque esse é meu
+                    pedido de <b>desculpas</b>, e essa foi uma forma que eu
+                    achei de me desculpar inicialmente... Sei que vacilei, e não
+                    deveria ter puxado assunto e nem visualizado story de
+                    ninguém, além de ter sido ignorante com você, assumo meu
+                    erro e tô vindo aqui te pedir perdão por tudo, por ter
+                    falhado contigo como amigo, parceiro e namorado, desculpa
+                    por ter te chateado e magoado. Prometo do fundo do coração,
+                    que isso não vai mais acontecer, vou mudar daqui pra frente
+                    e não vamos mais passar por isso.
+                  </p>
+                  <p>
+                    No dia que eu pedi permissão pro Denis pra gente namorar,
+                    aquelas lágrimas não foram de "mentira" e nem nada do tipo,
+                    foi porque eu achei que nunca encontraria alguém igual a
+                    você que me entende e que me ame igual você me ama. Foi por
+                    isso que naquele dia eu chorei, uma boa parte por alegria de
+                    ter conseguido te encontrar e ter gostado do teu jeitinho de
+                    braba e cuidadosa, tanto comigo como com a sua família
+                    também. Nossas brincadeiras, nossos momentos de carinho e de
+                    aconchego à sós, foram só aumentando o amor que sinto por
+                    você.
+                  </p>
+                  <p>
+                    A gente já passou por muita coisa junto, tanto boas como
+                    ruins também, na saúde e na doença, foi você que sempre
+                    esteve comigo desde o começo, sempre me deu forças para
+                    seguir em frente e não desistir no meu pior momento de vida
+                    até aqui. Não quero que tudo isso tenha sido em vão, ainda
+                    temos muitas coisas boas para viver juntos ainda, além
+                    disso, é com você que eu quero construir uma família, porque
+                    eu sei que você seria uma esposa e mãe perfeita para nossos
+                    filhos.
+                  </p>
+                  <p>
+                    Espero que tenha gostado do buquê e aceite meu pedido de
+                    desculpas. <b>Eu te amo muito.</b> ❤️
+                  </p>
+                  <p>Com amor, Regi.</p>
+
+                  <div class="divider"></div>
+
+                  <a
+                    class="heart-btn"
+                    id="waBtn"
+                    href="#"
+                    target="_blank"
+                    rel="noopener"
+                    aria-label="Abrir WhatsApp"
+                  >
+                    <span class="mini-heart" aria-hidden="true"></span>
+                    Clique aqui
+                  </a>
+
+                  <div class="polaroid" aria-label="Foto estilo polaroide">
+                    <div class="frame">
+                      <!-- Troque o src pela sua foto se quiser -->
+                      <img
+                        src="src/WhatsApp Image 2026-02-28 at 19.13.11.jpeg"
+                        alt="Foto estilo polaroide"
+                        loading="lazy"
+                      />
+                      <div class="cap">Te amo muito! ❤️</div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+          <div class="glow"></div>
+        </div>
+
+        <div class="actions">
+          <div class="slot" id="slot">
+            <button class="btn btn-round" id="openBtn" type="button">
+              Abrir carta
+            </button>
+          </div>
+
+          <div class="msg" id="msg" aria-live="polite"></div>
+        </div>
+      </section>
+    </main>
+
+    <audio id="openSound" preload="auto">
+      <source
+        src="https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
