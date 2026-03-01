@@ -46,20 +46,4 @@
   .letter .paper {
     padding: 18px 16px;
   }
-
-  /* =========================
-   TRAVA O SCROLL DO FUNDO
-   ========================= */
-  body.focus-mode {
-    overflow: hidden; /* trava scroll */
-    height: 100vh; /* garante que não “puxe” */
-    touch-action: none; /* bloqueia scroll/gestos no fundo (mobile) */
-  }
-
-  /* Mas permite scroll dentro da carta */
-  body.focus-mode .letter {
-    touch-action: pan-y; /* deixa deslizar só verticalmente na carta */
-    overscroll-behavior: contain; /* não “vaza” scroll pro fundo */
-    -webkit-overflow-scrolling: touch; /* scroll suave no iOS */
-  }
 }
