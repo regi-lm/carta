@@ -1,7 +1,6 @@
 // ===== Fundo de corações caindo =====
 (function heartRain() {
   const root = document.getElementById("heartRain");
-  const openSound = document.getElementById("openSound");
   const COUNT = 28;
 
   function rand(min, max) {
@@ -22,10 +21,9 @@
     h.style.width = size + "px";
     h.style.height = size + "px";
     h.style.animationDuration = dur + "s";
-    h.style.animationDelay = -delay + "s"; // começa “no meio”
+    h.style.animationDelay = -delay + "s";
     h.style.opacity = opacity;
 
-    // leve variação de cor
     const tint = rand(0.35, 0.75);
     h.style.background = `rgba(255, 77, 166, ${tint})`;
 
@@ -40,8 +38,9 @@ const slot = document.getElementById("slot");
 const openBtn = document.getElementById("openBtn");
 const msg = document.getElementById("msg");
 
-const shell = document.getElementById("shell");
+const shell = document.getElementById("shell"); // .envelope-shell
 const waBtn = document.getElementById("waBtn");
+const openSound = document.getElementById("openSound");
 
 // WhatsApp alvo
 const phone = "5591984536649";
@@ -92,26 +91,29 @@ function showPasswordField() {
       setMessage("good", "Senha correta!");
 
       setTimeout(() => {
-        // toca som do envelope abrindo
-        openSound.currentTime = 0;
-        openSound.play().catch(() => {});
+        // Som do envelope abrindo
+        if (openSound) {
+          openSound.currentTime = 0;
+          openSound.play().catch(() => {});
+        }
 
-        // abre envelope
+        // Abre envelope e ativa o modo "enhanced" (aspect-ratio 4/6)
         shell.classList.add("open");
+        shell.classList.add("enhanced");
 
-        // ativa modo foco total
         document.body.classList.add("focus-mode");
-      }, 400);
+
+        // Carta sempre começa do topo
+        const letter = document.getElementById("letter");
+        if (letter) letter.scrollTop = 0;
+      }, 350);
 
       passInput.disabled = true;
       checkBtn.disabled = true;
       checkBtn.style.opacity = 0.7;
       passInput.style.opacity = 0.9;
     } else {
-      setMessage(
-        "bad",
-        "Senha incorreta, apenas a Iza sabe qual é a senha correta!",
-      );
+      setMessage("bad", "Senha incorreta, apenas a Iza sabe qual é a senha correta!");
 
       passInput.animate(
         [
@@ -120,7 +122,7 @@ function showPasswordField() {
           { transform: "translateX(8px)" },
           { transform: "translateX(0)" },
         ],
-        { duration: 320, easing: "ease-out" },
+        { duration: 320, easing: "ease-out" }
       );
 
       passInput.focus();
