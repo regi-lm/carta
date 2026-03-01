@@ -26,8 +26,14 @@
 
   /* ✅ ABERTO no mobile: fica alto (4/6) */
   .envelope-shell.open.enhanced {
-    aspect-ratio: 4/6;      /* ABERTO */
+    width: min(600px, 90%); /* respiro nas laterais */
+    aspect-ratio: 4/8;      /* ABERTO */
+    position: relative;
+    margin: 20px auto;
+    perspective: 1200px;
+    transition: transform 700ms cubic-bezier(.2,.9,.2,1);
     transform: scale(1.12);
+    transform-origin: center;
   }
 
   .letter {
