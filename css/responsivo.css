@@ -15,11 +15,11 @@
   /* ✅ FECHADO no mobile: mais baixo */
   .envelope-shell {
     width: min(600px, 90%); /* respiro nas laterais */
-    aspect-ratio: 4/3;      /* FECHADO */
+    aspect-ratio: 4/3; /* FECHADO */
     position: relative;
     margin: 20px auto;
     perspective: 1200px;
-    transition: transform 700ms cubic-bezier(.2,.9,.2,1);
+    transition: transform 700ms cubic-bezier(0.2, 0.9, 0.2, 1);
     transform: scale(1);
     transform-origin: center;
   }
@@ -27,11 +27,11 @@
   /* ✅ ABERTO no mobile: fica alto (4/6) */
   .envelope-shell.open.enhanced {
     width: min(600px, 90%); /* respiro nas laterais */
-    aspect-ratio: 4/8;      /* ABERTO */
+    aspect-ratio: 4/8; /* ABERTO */
     position: relative;
     margin: 20px auto;
     perspective: 1200px;
-    transition: transform 700ms cubic-bezier(.2,.9,.2,1);
+    transition: transform 700ms cubic-bezier(0.2, 0.9, 0.2, 1);
     transform: scale(1.12);
     transform-origin: center;
   }
@@ -45,5 +45,21 @@
 
   .letter .paper {
     padding: 18px 16px;
+  }
+
+  /* =========================
+   TRAVA O SCROLL DO FUNDO
+   ========================= */
+  body.focus-mode {
+    overflow: hidden; /* trava scroll */
+    height: 100vh; /* garante que não “puxe” */
+    touch-action: none; /* bloqueia scroll/gestos no fundo (mobile) */
+  }
+
+  /* Mas permite scroll dentro da carta */
+  body.focus-mode .letter {
+    touch-action: pan-y; /* deixa deslizar só verticalmente na carta */
+    overscroll-behavior: contain; /* não “vaza” scroll pro fundo */
+    -webkit-overflow-scrolling: touch; /* scroll suave no iOS */
   }
 }
