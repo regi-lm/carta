@@ -44,7 +44,15 @@ const openSound = document.getElementById("openSound");
 
 // WhatsApp alvo
 const phone = "5591984536649";
-waBtn.href = `https://wa.me/${phone}`;
+
+// mensagem automática
+const message = "Oi, vamos conversar.";
+
+// codifica a mensagem para URL
+const encodedMessage = encodeURIComponent(message);
+
+// link com mensagem preenchida
+waBtn.href = `https://wa.me/${phone}?text=${encodedMessage}`;
 
 function setMessage(type, text) {
   msg.className = "msg " + (type || "");
