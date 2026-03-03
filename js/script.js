@@ -42,31 +42,25 @@ const shell = document.getElementById("shell"); // .envelope-shell
 const waBtn = document.getElementById("waBtn");
 const openSound = document.getElementById("openSound");
 
-// WhatsApp alvo
+// ✅ Overlay/Vídeo (precisa existir no HTML)
+const videoOverlay = document.getElementById("videoOverlay");
+const loveVideo = document.getElementById("loveVideo");
+
+// WhatsApp alvo + mensagem automática
 const phone = "5591984536649";
+const message = "Oi.";
+waBtn.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
-// mensagem automática
-const message = "Oi, vamos conversar.";
-
-// codifica a mensagem para URL
-const encodedMessage = encodeURIComponent(message);
-
-// link com mensagem preenchida
-waBtn.href = `https://wa.me/${phone}?text=${encodedMessage}`;
-
+// ===== Helpers =====
 function setMessage(type, text) {
   msg.className = "msg " + (type || "");
   msg.innerHTML = "";
-
   if (!text) return;
 
   const icon = document.createElement("span");
   icon.className = "icon";
   icon.setAttribute("aria-hidden", "true");
-
-  if (type === "good") icon.innerHTML = "✓";
-  else if (type === "bad") icon.innerHTML = "!";
-  else icon.innerHTML = "•";
+  icon.innerHTML = type === "good" ? "✓" : type === "bad" ? "!" : "•";
 
   const span = document.createElement("span");
   span.textContent = text;
@@ -74,16 +68,68 @@ function setMessage(type, text) {
   msg.append(icon, span);
 }
 
+function openVideoModal() {
+  // ativa foco total pra travar o fundo (scroll off)
+  document.body.classList.add("focus-mode");
+
+  // mostra overlay (classe show)
+  if (videoOverlay) {
+    videoOverlay.classList.add("show");
+    videoOverlay.classList.remove("fade-out");
+    videoOverlay.setAttribute("aria-hidden", "false");
+  }
+
+  // reinicia e tenta tocar
+  if (loveVideo) {
+    try {
+      loveVideo.currentTime = 0;
+    } catch {}
+    loveVideo.play().catch(() => {
+      // autoplay pode ser bloqueado; usuário dá play manual
+    });
+  }
+}
+
+function closeVideoModalThenOpenEnvelope() {
+  // some overlay suavemente
+  if (videoOverlay) {
+    videoOverlay.classList.add("fade-out");
+    videoOverlay.classList.remove("show");
+    videoOverlay.setAttribute("aria-hidden", "true");
+  }
+
+  // pausa vídeo
+  if (loveVideo) loveVideo.pause();
+
+  // após a animação do overlay, abre envelope e toca som
+  setTimeout(() => {
+    // abre envelope (visual)
+    shell.classList.add("open");
+    shell.classList.add("enhanced");
+
+    // carta começa do topo
+    const letter = document.getElementById("letter");
+    if (letter) letter.scrollTop = 0;
+
+    // som começa EXATAMENTE ao abrir
+    if (openSound) {
+      openSound.currentTime = 0;
+      openSound.play().catch(() => {});
+    }
+  }, 450);
+}
+
+// ===== Campo de senha =====
 function showPasswordField() {
   slot.innerHTML = `
     <div class="pass-wrap">
       <label for="passInput">Digite a senha correta</label>
       <div class="pass">
         <input id="passInput" type="password" inputmode="numeric" autocomplete="one-time-code"
-          placeholder="••••••" aria-label="Digite a senha correta" />
+          placeholder="• • • • • •" aria-label="Digite a senha correta" />
         <button class="btn btn-round" id="checkBtn" type="button" style="width:132px;height:46px;">OK</button>
       </div>
-      <p class="hint"><i>a senha para abrir a carta é a senha do teu celular</i></p>
+      <p class="hint"><i>a senha para abrir a carta é a senha do celular da Iza</i></p>
     </div>
   `;
 
@@ -98,22 +144,10 @@ function showPasswordField() {
     if (value === PASSWORD) {
       setMessage("good", "Senha correta!");
 
+      // ✅ Agora NÃO abre envelope direto.
+      // Primeiro abre o card do vídeo.
       setTimeout(() => {
-        // Som do envelope abrindo
-        if (openSound) {
-          openSound.currentTime = 0;
-          openSound.play().catch(() => {});
-        }
-
-        // Abre envelope e ativa o modo "enhanced" (aspect-ratio 4/6)
-        shell.classList.add("open");
-        shell.classList.add("enhanced");
-
-        document.body.classList.add("focus-mode");
-
-        // Carta sempre começa do topo
-        const letter = document.getElementById("letter");
-        if (letter) letter.scrollTop = 0;
+        openVideoModal();
       }, 350);
 
       passInput.disabled = true;
@@ -144,7 +178,15 @@ function showPasswordField() {
   });
 }
 
+// ===== Clique inicial =====
 openBtn.addEventListener("click", () => {
   setMessage("", "");
   showPasswordField();
 });
+
+// ✅ Quando o vídeo terminar: fecha modal e abre envelope
+if (loveVideo) {
+  loveVideo.addEventListener("ended", () => {
+    closeVideoModalThenOpenEnvelope();
+  });
+}

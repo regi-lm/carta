@@ -46,4 +46,12 @@
   .letter .paper {
     padding: 18px 16px;
   }
+
+  .video-card{
+    width: min(900px, 90vw);
+  }
+
+  .video-wrap video{
+    width: 75%;
+  }
 }
