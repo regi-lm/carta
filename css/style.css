@@ -245,28 +245,43 @@ h1 > h2 {
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
 }
 
+/* ✅ LETTER: scroll liberado na ÁREA TODA */
 .letter{
-  position:absolute;
+  position: absolute;
   top: 25%;
   left: 50%;
   bottom: 10px;
   width: 80%;
+
+  /* deixa a área rolável consistente */
   max-height: 75vh;
-  transform: translate(-50%, -50%) scale(.98); /* centralização real */
+  height: auto;
+
+  transform: translate(-50%, -50%) scale(.98);
   background: rgba(255,255,255,.95);
   color: #1c1524;
   border-radius: 18px;
   box-shadow: 0 30px 70px rgba(0,0,0,.45);
   border: 1px solid rgba(0,0,0,.08);
+
   opacity: 0;
   z-index: 6;
+
   transition:
     transform 900ms cubic-bezier(.2,.9,.2,1),
     opacity 500ms ease;
+
+  /* ✅ scroll funcionando em qualquer lugar do card */
   overflow-y: auto;
   overflow-x: hidden;
+
+  -webkit-overflow-scrolling: touch; /* iOS suave */
+  overscroll-behavior: contain;      /* não vaza pro body */
+  touch-action: pan-y;               /* gesto de scroll no mobile */
+
   scroll-behavior: smooth;
 }
+
 .letter .paper {
   padding: 22px 20px 18px;
 }
