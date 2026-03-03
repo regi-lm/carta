@@ -13,8 +13,11 @@
 }
 
 * {
+  padding: 0;
+  margin: 0;
   box-sizing: border-box;
 }
+
 html,
 body {
   height: 100%;
@@ -34,7 +37,7 @@ body {
     radial-gradient(1200px 800px at 20% 10%, #2a0f3f 0%, transparent 60%),
     radial-gradient(900px 700px at 90% 30%, #3a0e2f 0%, transparent 55%),
     linear-gradient(180deg, var(--bg1), var(--bg2));
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 /* Fundo com corações caindo */
@@ -306,21 +309,21 @@ h1 > h2 {
 }
 
 /* Scrollbar personalizada */
-.letter::-webkit-scrollbar {
+.letter .paper::-webkit-scrollbar {
   width: 8px;
 }
 
-.letter::-webkit-scrollbar-track {
+.letter .paper::-webkit-scrollbar-track {
   background: rgba(0,0,0,.05);
   border-radius: 10px;
 }
 
-.letter::-webkit-scrollbar-thumb {
+.letter .paper::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #ff4da6, #ff79c6);
   border-radius: 10px;
 }
 
-.letter::-webkit-scrollbar-thumb:hover {
+.letter .paper::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #ff2f86, #ff6bc1);
 }
 
@@ -709,8 +712,22 @@ input:focus {
   text-align: center;
 }
 
-/* ✅ importante: se você tiver body travado em algum momento,
-   NÃO use touch-action:none nele. Isso mata o scroll no iOS. */
+/* ✅ trava scroll da página inteira pra sempre */
+html, body {
+  height: 100%;
+}
+
+body {
+  overflow: hidden; /* não rola nunca */
+}
+
+/* lock real (mantém fixo em mobile) */
 body.body-locked{
-  touch-action: auto !important;
+  position: fixed;
+  top: var(--lock-top, 0px);
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
