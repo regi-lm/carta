@@ -39,6 +39,35 @@ body {
   overflow-x: hidden;
 }
 
+/* =========================
+   ✅ CONTROLE DE SCROLL
+   - lock-scroll: trava TUDO (durante o vídeo)
+   - focus-mode: trava fundo, mas permite scroll na carta
+   ========================= */
+body.lock-scroll {
+  overflow: hidden;
+  height: 100vh;
+  touch-action: none; /* trava gestos no mobile durante o vídeo */
+}
+
+body.lock-scroll .video-overlay,
+body.lock-scroll .video-card {
+  overflow: hidden !important; /* overlay/card sem scroll durante vídeo */
+}
+
+body.focus-mode {
+  overflow: hidden; /* trava fundo quando envelope aparece */
+  height: 100vh;
+}
+
+/* Só a carta pode rolar no modo foco */
+body.focus-mode .letter {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
 /* Fundo com corações caindo */
 .heart-rain {
   position: fixed;
