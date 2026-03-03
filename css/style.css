@@ -13,8 +13,6 @@
 }
 
 * {
-  padding: 0;
-  margin: 0;
   box-sizing: border-box;
 }
 html,
@@ -36,7 +34,7 @@ body {
     radial-gradient(1200px 800px at 20% 10%, #2a0f3f 0%, transparent 60%),
     radial-gradient(900px 700px at 90% 30%, #3a0e2f 0%, transparent 55%),
     linear-gradient(180deg, var(--bg1), var(--bg2));
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* Fundo com corações caindo */
@@ -248,44 +246,29 @@ h1 > h2 {
 }
 
 .letter{
-  position: absolute;
+  position:absolute;
   top: 25%;
   left: 50%;
   bottom: 10px;
   width: 80%;
   max-height: 75vh;
-
-  transform: translate(-50%, -50%) scale(.98);
+  transform: translate(-50%, -50%) scale(.98); /* centralização real */
   background: rgba(255,255,255,.95);
   color: #1c1524;
   border-radius: 18px;
   box-shadow: 0 30px 70px rgba(0,0,0,.45);
   border: 1px solid rgba(0,0,0,.08);
-
   opacity: 0;
   z-index: 6;
-
   transition:
     transform 900ms cubic-bezier(.2,.9,.2,1),
     opacity 500ms ease;
-
-  /* ❌ NÃO ROLA AQUI */
-  overflow: hidden;
-}
-
-.letter .paper{
-  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-
-  padding: 22px 20px 18px;
-
-  /* mobile suave */
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  touch-action: pan-y;
-
   scroll-behavior: smooth;
+}
+.letter .paper {
+  padding: 22px 20px 18px;
 }
 
 .letter h2 {
@@ -643,90 +626,4 @@ input:focus {
 
 .focus-mode .letter {
   transform: translateX(-50%) translateY(-15%) scale(1.08);
-}
-
-/* =========================
-   ✅ OVERLAY DO VÍDEO
-   ========================= */
-.video-overlay{
-  position: fixed;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background: rgba(0,0,0,.70); /* fundo opaco 70% */
-  z-index: 2000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 450ms ease;
-}
-.video-overlay.show{
-  opacity: 1;
-  pointer-events: auto;
-}
-.video-overlay.fade-out{
-  opacity: 0;
-  pointer-events: none;
-}
-
-.video-card{
-  width: min(900px, 80vw);   /* card cobrindo ~80% da tela */
-  max-height: 80vh;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 22px;
-  box-shadow: 0 30px 90px rgba(0,0,0,.55);
-  backdrop-filter: blur(10px);
-  padding: 18px;
-  transform: translateY(10px) scale(.98);
-  transition: transform 450ms ease;
-}
-.video-overlay.show .video-card{
-  transform: translateY(0) scale(1);
-}
-.video-card h2{
-  margin: 0 0 12px;
-  font-family: "Playfair Display", serif;
-  font-style: italic;
-  font-weight: 600;
-  letter-spacing: .2px;
-}
-.video-wrap{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 18px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,.18);
-  background: rgba(0,0,0,.35);
-}
-.video-wrap video{
-  width: 30%;
-  height: auto;
-  display:block;
-}
-.video-hint{
-  margin: 10px 0 0;
-  color: rgba(255,255,255,.75);
-  font-size: 13px;
-  text-align: center;
-}
-
-/* ✅ trava scroll da página inteira pra sempre */
-html, body {
-  height: 100%;
-}
-
-body {
-  overflow: hidden; /* não rola nunca */
-}
-
-/* lock real (mantém fixo em mobile) */
-body.body-locked{
-  position: fixed;
-  top: var(--lock-top, 0px);
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
 }
