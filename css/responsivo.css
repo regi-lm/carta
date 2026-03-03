@@ -5,7 +5,15 @@
    ========================= */
 @media (max-width: 768px) {
   .panel {
-    padding: 22px 16px 18px;
+    padding: 20px 16px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  h4 {
+    font-size: 14px;
   }
 
   .btn-round {
