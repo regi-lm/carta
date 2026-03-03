@@ -45,10 +45,10 @@
   }
 
   .letter {
-    top: 25%;
+    top: 10%;
     left: 50%;
     bottom: 10px;
-    width: 80%;
+    width: 85%;
   }
 
   .letter .paper {
@@ -56,10 +56,10 @@
   }
 
   .video-card{
-    width: min(900px, 90vw);
+    width: min(900px, 80vw);
   }
 
   .video-wrap video{
-    width: 75%;
+    width: 100%;
   }
 }

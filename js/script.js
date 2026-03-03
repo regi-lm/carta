@@ -41,6 +41,75 @@ const msg = document.getElementById("msg");
 const shell = document.getElementById("shell"); // .envelope-shell
 const waBtn = document.getElementById("waBtn");
 const openSound = document.getElementById("openSound");
+const videoOverlay = document.getElementById("videoOverlay");
+const loveVideo = document.getElementById("loveVideo");
+
+function showVideo() {
+  if (!videoOverlay || !loveVideo) return;
+
+  // prepara do começo
+  try {
+    loveVideo.currentTime = 0;
+  } catch (_) {}
+
+  videoOverlay.classList.add("show");
+  videoOverlay.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-lock");
+
+  // tenta dar play (senha OK conta como gesto do usuário)
+  const p = loveVideo.play();
+  if (p && typeof p.catch === "function") {
+    p.catch(() => {
+      // se o autoplay falhar (comum no mobile), o usuário dá play pelo controle
+    });
+  }
+}
+
+function hideVideo(onDone) {
+  if (!videoOverlay) return onDone && onDone();
+
+  let finished = false;
+  const done = () => {
+    if (finished) return;
+    finished = true;
+    onDone && onDone();
+  };
+
+  videoOverlay.classList.remove("show");
+  videoOverlay.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-lock");
+
+  // espera a transição terminar pra ficar suave
+  const handler = (e) => {
+    if (e.target !== videoOverlay || e.propertyName !== "opacity") return;
+    videoOverlay.removeEventListener("transitionend", handler);
+    done();
+  };
+  videoOverlay.addEventListener("transitionend", handler);
+
+  // fallback (caso transitionend não dispare)
+  setTimeout(() => {
+    videoOverlay.removeEventListener("transitionend", handler);
+    done();
+  }, 900);
+}
+
+function openEnvelope() {
+  // Som do envelope abrindo
+  if (openSound) {
+    openSound.currentTime = 0;
+    openSound.play().catch(() => {});
+  }
+
+  // Abre envelope e ativa o modo "enhanced"
+  shell.classList.add("open");
+  shell.classList.add("enhanced");
+  document.body.classList.add("focus-mode");
+
+  // scroll sempre do topo
+  const paper = document.querySelector("#letter .paper");
+  if (paper) paper.scrollTop = 0;
+}
 
 // WhatsApp alvo
 const phone = "5591984536649";
@@ -98,23 +167,28 @@ function showPasswordField() {
     if (value === PASSWORD) {
       setMessage("good", "Senha correta!");
 
+      // 1) Mostra o vídeo com fade suave
       setTimeout(() => {
-        // Som do envelope abrindo
-        if (openSound) {
-          openSound.currentTime = 0;
-          openSound.play().catch(() => {});
+        showVideo();
+
+        // 2) Quando o vídeo acabar, ele some suave e o envelope aparece
+        if (loveVideo) {
+          const onEnded = () => {
+            loveVideo.removeEventListener("ended", onEnded);
+
+            // para o vídeo pra não ficar consumindo recursos
+            try { loveVideo.pause(); } catch (_) {}
+
+            hideVideo(() => {
+              openEnvelope();
+            });
+          };
+
+          // garante que não duplica listener
+          loveVideo.removeEventListener("ended", onEnded);
+          loveVideo.addEventListener("ended", onEnded, { once: true });
         }
-
-        // Abre envelope e ativa o modo "enhanced" (aspect-ratio 4/6)
-        shell.classList.add("open");
-        shell.classList.add("enhanced");
-
-        document.body.classList.add("focus-mode");
-
-        // Carta sempre começa do topo
-        const letter = document.getElementById("letter");
-        if (letter) letter.scrollTop = 0;
-      }, 350);
+      }, 250);
 
       passInput.disabled = true;
       checkBtn.disabled = true;

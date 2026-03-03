@@ -245,14 +245,17 @@ h1 > h2 {
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
 }
 
+
 .letter{
   position:absolute;
-  top: 25%;
+  top: 14%;
   left: 50%;
   bottom: 10px;
   width: 80%;
   max-height: 75vh;
-  transform: translate(-50%, -50%) scale(.98); /* centralização real */
+
+  /* 👇 sem translateY(-50%) pra não bugar scroll em mobile */
+  transform: translateX(-50%) translateY(14px);
   background: rgba(255,255,255,.95);
   color: #1c1524;
   border-radius: 18px;
@@ -260,14 +263,24 @@ h1 > h2 {
   border: 1px solid rgba(0,0,0,.08);
   opacity: 0;
   z-index: 6;
+
   transition:
-    transform 900ms cubic-bezier(.2,.9,.2,1),
+    transform 700ms cubic-bezier(.2,.9,.2,1),
     opacity 500ms ease;
+
+  overflow: hidden; /* scroll fica no .paper */
+  display: flex;
+  flex-direction: column;
+  touch-action: pan-y;
+}
+
+.letter .paper{
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   scroll-behavior: smooth;
-}
-.letter .paper {
   padding: 22px 20px 18px;
 }
 
@@ -291,21 +304,21 @@ h1 > h2 {
 }
 
 /* Scrollbar personalizada */
-.letter::-webkit-scrollbar {
+.letter .paper::-webkit-scrollbar {
   width: 8px;
 }
 
-.letter::-webkit-scrollbar-track {
+.letter .paper::-webkit-scrollbar-track {
   background: rgba(0,0,0,.05);
   border-radius: 10px;
 }
 
-.letter::-webkit-scrollbar-thumb {
+.letter .paper::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #ff4da6, #ff79c6);
   border-radius: 10px;
 }
 
-.letter::-webkit-scrollbar-thumb:hover {
+.letter .paper::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #ff2f86, #ff6bc1);
 }
 
@@ -573,7 +586,7 @@ input:focus {
 
 .open .letter{
   opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
+  transform: translateX(-50%) translateY(0);
 }
 
 /* Glow */
@@ -625,5 +638,90 @@ input:focus {
 }
 
 .focus-mode .letter {
-  transform: translateX(-50%) translateY(-15%) scale(1.08);
+  transform: translateX(-50%) translateY(0);
+}
+
+
+/* ===== VIDEO OVERLAY (aparece após senha correta) ===== */
+
+.video-overlay{
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(0,0,0,.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 2000;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity 700ms cubic-bezier(.2,.9,.2,1),
+    visibility 0s linear 700ms;
+}
+
+.video-overlay.show{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity 700ms cubic-bezier(.2,.9,.2,1),
+    visibility 0s;
+}
+
+.video-card{
+  width: min(900px, 92vw);
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  padding: 18px 18px 14px;
+  transform: translateY(18px) scale(.985);
+  opacity: 0;
+
+  transition:
+    transform 700ms cubic-bezier(.2,.9,.2,1),
+    opacity 700ms ease;
+}
+
+.video-overlay.show .video-card{
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.video-card h3{
+  margin: 0 0 12px;
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.25;
+  letter-spacing: .2px;
+}
+
+.video-wrap{
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(0,0,0,.35);
+}
+
+.video-wrap video{
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.video-hint{
+  margin: 10px 2px 0;
+  color: rgba(255,255,255,.78);
+  font-size: 13px;
+}
+
+body.modal-lock{
+  overflow: hidden;
 }
