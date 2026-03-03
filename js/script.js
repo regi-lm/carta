@@ -38,22 +38,19 @@ const slot = document.getElementById("slot");
 const openBtn = document.getElementById("openBtn");
 const msg = document.getElementById("msg");
 
-const shell = document.getElementById("shell"); // .envelope-shell
+const shell = document.getElementById("shell"); // envelope-shell
 const waBtn = document.getElementById("waBtn");
 const openSound = document.getElementById("openSound");
 
-// Overlay/Vídeo
+// ✅ Overlay e vídeo
 const videoOverlay = document.getElementById("videoOverlay");
 const loveVideo = document.getElementById("loveVideo");
 
-// WhatsApp alvo + mensagem automática
+// WhatsApp com mensagem
 const phone = "5591984536649";
-const message = "Oi.";
+const message = "Oi ❤️ Acabei de abrir a carta... e precisava falar com você 🥰";
 waBtn.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-waBtn.target = "_blank";
-waBtn.rel = "noopener noreferrer";
 
-// ===== Helpers =====
 function setMessage(type, text) {
   msg.className = "msg " + (type || "");
   msg.innerHTML = "";
@@ -70,65 +67,52 @@ function setMessage(type, text) {
   msg.append(icon, span);
 }
 
-// ===== trava o body SEMPRE =====
-let savedScrollY = 0;
-
-function lockBodyForever() {
-  savedScrollY = window.scrollY || 0;
-  document.body.style.setProperty("--lock-top", `-${savedScrollY}px`);
-  document.body.classList.add("body-locked");
-}
-
-window.addEventListener("load", () => {
-  lockBodyForever();
-});
-
-// ===== vídeo =====
 function openVideoModal() {
-  lockBodyForever();
+  // trava scroll do fundo já aqui
   document.body.classList.add("focus-mode");
 
-  if (videoOverlay) {
-    videoOverlay.classList.add("show");
-    videoOverlay.classList.remove("fade-out");
-    videoOverlay.setAttribute("aria-hidden", "false");
-  }
+  // mostra overlay
+  videoOverlay.classList.add("show");
+  videoOverlay.setAttribute("aria-hidden", "false");
 
-  if (loveVideo) {
-    try { loveVideo.currentTime = 0; } catch {}
-    loveVideo.play().catch(() => {});
-  }
+  // reinicia vídeo
+  try {
+    loveVideo.currentTime = 0;
+  } catch {}
+  // tenta autoplay; se o navegador bloquear, o usuário clica play
+  loveVideo.play().catch(() => {});
 }
 
-function closeVideoModalThenOpenEnvelope() {
-  if (videoOverlay) {
-    videoOverlay.classList.add("fade-out");
-    videoOverlay.classList.remove("show");
-    videoOverlay.setAttribute("aria-hidden", "true");
-  }
+function closeVideoModalAndOpenEnvelope() {
+  // fade out suave do overlay
+  videoOverlay.classList.add("fade-out");
+  videoOverlay.classList.remove("show");
+  videoOverlay.setAttribute("aria-hidden", "true");
 
-  if (loveVideo) loveVideo.pause();
+  // garante vídeo parado
+  loveVideo.pause();
 
+  // depois que o fade acabar, abre o envelope + toca som
   setTimeout(() => {
     // abre envelope
     shell.classList.add("open");
+    shell.classList.add("enhanced");
 
-    // som começa exatamente ao abrir
+    // carta começa do topo
+    const letter = document.getElementById("letter");
+    if (letter) letter.scrollTop = 0;
+
+    // som inicia EXATAMENTE ao abrir
     if (openSound) {
       openSound.currentTime = 0;
       openSound.play().catch(() => {});
     }
 
-    // ✅ scroll começa do topo SOMENTE no paper
-    const paper = document.querySelector("#letter .paper");
-    if (paper) paper.scrollTop = 0;
-
-    // ✅ garante que o body continua sem scroll
-    lockBodyForever();
+    // limpa classe de fade para permitir reabrir se precisar
+    videoOverlay.classList.remove("fade-out");
   }, 450);
 }
 
-// ===== Campo de senha =====
 function showPasswordField() {
   slot.innerHTML = `
     <div class="pass-wrap">
@@ -138,7 +122,7 @@ function showPasswordField() {
           placeholder="• • • • • •" aria-label="Digite a senha correta" />
         <button class="btn btn-round" id="checkBtn" type="button" style="width:132px;height:46px;">OK</button>
       </div>
-      <p class="hint"><i>a senha para abrir a carta é a senha do celular da Iza</i></p>
+      <p class="hint"><i>A senha para abrir a carta é a senha celular da Iza</i></p>
     </div>
   `;
 
@@ -152,7 +136,11 @@ function showPasswordField() {
 
     if (value === PASSWORD) {
       setMessage("good", "Senha correta!");
-      setTimeout(() => openVideoModal(), 350);
+
+      setTimeout(() => {
+        // abre o modal de vídeo (antes do envelope)
+        openVideoModal();
+      }, 350);
 
       passInput.disabled = true;
       checkBtn.disabled = true;
@@ -166,7 +154,7 @@ function showPasswordField() {
           { transform: "translateX(0)" },
           { transform: "translateX(-8px)" },
           { transform: "translateX(8px)" },
-          { transform: "translateX(0)" },
+          { transform: "translateX(0)" }
         ],
         { duration: 320, easing: "ease-out" }
       );
@@ -182,15 +170,12 @@ function showPasswordField() {
   });
 }
 
-// ===== Clique inicial =====
 openBtn.addEventListener("click", () => {
   setMessage("", "");
   showPasswordField();
 });
 
-// ✅ quando vídeo terminar: fecha modal e abre envelope
-if (loveVideo) {
-  loveVideo.addEventListener("ended", () => {
-    closeVideoModalThenOpenEnvelope();
-  });
-}
+// ✅ Quando o vídeo terminar, fecha overlay e abre envelope
+loveVideo.addEventListener("ended", () => {
+  closeVideoModalAndOpenEnvelope();
+});

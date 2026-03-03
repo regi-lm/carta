@@ -17,7 +17,6 @@
   margin: 0;
   box-sizing: border-box;
 }
-
 html,
 body {
   height: 100%;
@@ -309,21 +308,21 @@ h1 > h2 {
 }
 
 /* Scrollbar personalizada */
-.letter .paper::-webkit-scrollbar {
+.letter::-webkit-scrollbar {
   width: 8px;
 }
 
-.letter .paper::-webkit-scrollbar-track {
+.letter::-webkit-scrollbar-track {
   background: rgba(0,0,0,.05);
   border-radius: 10px;
 }
 
-.letter .paper::-webkit-scrollbar-thumb {
+.letter::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #ff4da6, #ff79c6);
   border-radius: 10px;
 }
 
-.letter .paper::-webkit-scrollbar-thumb:hover {
+.letter::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #ff2f86, #ff6bc1);
 }
 
