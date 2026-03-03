@@ -68,110 +68,15 @@ function setMessage(type, text) {
   msg.append(icon, span);
 }
 
-/* =========================
-   ✅ Lock real do body (fixo)
-   ========================= */
-let savedScrollY = 0;
-
-function lockBody() {
-  savedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
-  document.body.style.setProperty("--lock-top", `-${savedScrollY}px`);
-  document.body.classList.add("body-locked");
-}
-
-function unlockBody() {
-  document.body.classList.remove("body-locked");
-  document.body.style.removeProperty("--lock-top");
-  window.scrollTo(0, savedScrollY);
-}
-
-/* =========================
-   ✅ Scroll “em qualquer lugar” controla a carta
-   (mouse wheel + touch arrastar)
-   ========================= */
-let anywhereScrollEnabled = false;
-let touchStartY = null;
-
-function isInteractiveTarget(el) {
-  if (!el) return false;
-  return !!el.closest("a, button, input, textarea, select, video, label");
-}
-
-function enableAnywhereScroll() {
-  if (anywhereScrollEnabled) return;
-  anywhereScrollEnabled = true;
-
-  // Mouse wheel: rola a carta mesmo fora dela
-  document.addEventListener(
-    "wheel",
-    (e) => {
-      if (!document.body.classList.contains("scroll-unlocked")) return;
-      const letter = document.getElementById("letter");
-      if (!letter) return;
-
-      // se estiver interagindo com botões/vídeo, deixa normal
-      if (isInteractiveTarget(e.target)) return;
-
-      // Se o mouse estiver em cima da carta, deixa o scroll normal dela
-      // Se estiver fora, empurra o scroll da carta
-      if (!letter.contains(e.target)) {
-        e.preventDefault();
-        letter.scrollTop += e.deltaY;
-      }
-    },
-    { passive: false }
-  );
-
-  // Touch: arrastar em qualquer área empurra o scroll da carta
-  document.addEventListener(
-    "touchstart",
-    (e) => {
-      if (!document.body.classList.contains("scroll-unlocked")) return;
-      if (isInteractiveTarget(e.target)) return;
-      touchStartY = e.touches[0].clientY;
-    },
-    { passive: true }
-  );
-
-  document.addEventListener(
-    "touchmove",
-    (e) => {
-      if (!document.body.classList.contains("scroll-unlocked")) return;
-      const letter = document.getElementById("letter");
-      if (!letter) return;
-
-      if (touchStartY == null) return;
-      if (isInteractiveTarget(e.target)) return;
-
-      const y = e.touches[0].clientY;
-      const dy = touchStartY - y;
-      touchStartY = y;
-
-      // se arrastou fora da carta, empurra o scroll dela
-      if (!letter.contains(e.target)) {
-        e.preventDefault();
-        letter.scrollTop += dy;
-      }
-    },
-    { passive: false }
-  );
-
-  document.addEventListener(
-    "touchend",
-    () => {
-      touchStartY = null;
-    },
-    { passive: true }
-  );
-}
-
 /**
- * ✅ Durante o vídeo:
- * - body fixo (sem scroll)
- * - overlay aparece
+ * ✅ Durante o vídeo: SEM scroll em lugar nenhum.
+ * A gente trava tudo com lock-scroll.
  */
 function openVideoModal() {
-  lockBody();
+  // trava tudo (sem scroll)
+  document.body.classList.add("lock-scroll");
+
+  // mantém foco visual (some painel/ações)
   document.body.classList.add("focus-mode");
 
   if (videoOverlay) {
@@ -181,8 +86,12 @@ function openVideoModal() {
   }
 
   if (loveVideo) {
-    try { loveVideo.currentTime = 0; } catch {}
-    loveVideo.play().catch(() => {});
+    try {
+      loveVideo.currentTime = 0;
+    } catch {}
+    loveVideo.play().catch(() => {
+      // autoplay pode ser bloqueado; usuário dá play manual
+    });
   }
 }
 
@@ -190,7 +99,7 @@ function openVideoModal() {
  * ✅ Quando o vídeo termina:
  * - overlay some suave
  * - abre envelope
- * - libera scroll em qualquer lugar da tela
+ * - só então liberamos o scroll (mas só na carta)
  */
 function closeVideoModalThenOpenEnvelope() {
   if (videoOverlay) {
@@ -205,14 +114,11 @@ function closeVideoModalThenOpenEnvelope() {
     // abre envelope
     shell.classList.add("open");
 
-    // destrava body
-    unlockBody();
+    // libera scroll (somente na carta, pois focus-mode trava o fundo)
+    document.body.classList.remove("lock-scroll");
 
-    // ✅ Agora libera scroll em qualquer lugar
-    document.body.classList.add("scroll-unlocked");
-
-    // carta começa do topo
-    const letter = document.getElementById("letter");
+    // carta sempre começa do topo
+    const letter = document.getElementById("body");
     if (letter) letter.scrollTop = 0;
 
     // som começa EXATAMENTE ao abrir o envelope
@@ -220,9 +126,6 @@ function closeVideoModalThenOpenEnvelope() {
       openSound.currentTime = 0;
       openSound.play().catch(() => {});
     }
-
-    // habilita scroll “em qualquer lugar” para controlar a carta
-    enableAnywhereScroll();
   }, 450);
 }
 
@@ -289,7 +192,7 @@ openBtn.addEventListener("click", () => {
   showPasswordField();
 });
 
-// Quando o vídeo terminar: fecha modal e abre envelope
+// ✅ Quando o vídeo terminar: fecha modal e abre envelope
 if (loveVideo) {
   loveVideo.addEventListener("ended", () => {
     closeVideoModalThenOpenEnvelope();
