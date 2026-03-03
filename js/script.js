@@ -42,7 +42,7 @@ const shell = document.getElementById("shell"); // .envelope-shell
 const waBtn = document.getElementById("waBtn");
 const openSound = document.getElementById("openSound");
 
-// Overlay/Vídeo
+// ✅ Overlay/Vídeo (precisa existir no HTML)
 const videoOverlay = document.getElementById("videoOverlay");
 const loveVideo = document.getElementById("loveVideo");
 
@@ -68,23 +68,18 @@ function setMessage(type, text) {
   msg.append(icon, span);
 }
 
-/**
- * ✅ Durante o vídeo: SEM scroll em lugar nenhum.
- * A gente trava tudo com lock-scroll.
- */
 function openVideoModal() {
-  // trava tudo (sem scroll)
-  document.body.classList.add("lock-scroll");
-
-  // mantém foco visual (some painel/ações)
+  // ativa foco total pra travar o fundo (scroll off)
   document.body.classList.add("focus-mode");
 
+  // mostra overlay (classe show)
   if (videoOverlay) {
     videoOverlay.classList.add("show");
     videoOverlay.classList.remove("fade-out");
     videoOverlay.setAttribute("aria-hidden", "false");
   }
 
+  // reinicia e tenta tocar
   if (loveVideo) {
     try {
       loveVideo.currentTime = 0;
@@ -95,33 +90,28 @@ function openVideoModal() {
   }
 }
 
-/**
- * ✅ Quando o vídeo termina:
- * - overlay some suave
- * - abre envelope
- * - só então liberamos o scroll (mas só na carta)
- */
 function closeVideoModalThenOpenEnvelope() {
+  // some overlay suavemente
   if (videoOverlay) {
     videoOverlay.classList.add("fade-out");
     videoOverlay.classList.remove("show");
     videoOverlay.setAttribute("aria-hidden", "true");
   }
 
+  // pausa vídeo
   if (loveVideo) loveVideo.pause();
 
+  // após a animação do overlay, abre envelope e toca som
   setTimeout(() => {
-    // abre envelope
+    // abre envelope (visual)
     shell.classList.add("open");
+    shell.classList.add("enhanced");
 
-    // libera scroll (somente na carta, pois focus-mode trava o fundo)
-    document.body.classList.remove("lock-scroll");
-
-    // carta sempre começa do topo
-    const letter = document.getElementById("body");
+    // carta começa do topo
+    const letter = document.getElementById("letter");
     if (letter) letter.scrollTop = 0;
 
-    // som começa EXATAMENTE ao abrir o envelope
+    // som começa EXATAMENTE ao abrir
     if (openSound) {
       openSound.currentTime = 0;
       openSound.play().catch(() => {});
@@ -154,6 +144,8 @@ function showPasswordField() {
     if (value === PASSWORD) {
       setMessage("good", "Senha correta!");
 
+      // ✅ Agora NÃO abre envelope direto.
+      // Primeiro abre o card do vídeo.
       setTimeout(() => {
         openVideoModal();
       }, 350);
@@ -170,7 +162,7 @@ function showPasswordField() {
           { transform: "translateX(0)" },
           { transform: "translateX(-8px)" },
           { transform: "translateX(8px)" },
-          { transform: "translateX(0)" }
+          { transform: "translateX(0)" },
         ],
         { duration: 320, easing: "ease-out" }
       );
