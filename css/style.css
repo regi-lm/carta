@@ -245,17 +245,13 @@ h1 > h2 {
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-/* ✅ LETTER: scroll liberado na ÁREA TODA */
 .letter{
   position: absolute;
   top: 25%;
   left: 50%;
   bottom: 10px;
   width: 80%;
-
-  /* deixa a área rolável consistente */
   max-height: 75vh;
-  height: auto;
 
   transform: translate(-50%, -50%) scale(.98);
   background: rgba(255,255,255,.95);
@@ -271,19 +267,23 @@ h1 > h2 {
     transform 900ms cubic-bezier(.2,.9,.2,1),
     opacity 500ms ease;
 
-  /* ✅ scroll funcionando em qualquer lugar do card */
+  /* ❌ NÃO ROLA AQUI */
+  overflow: hidden;
+}
+
+.letter .paper{
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
 
-  -webkit-overflow-scrolling: touch; /* iOS suave */
-  overscroll-behavior: contain;      /* não vaza pro body */
-  touch-action: pan-y;               /* gesto de scroll no mobile */
+  padding: 22px 20px 18px;
+
+  /* mobile suave */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
 
   scroll-behavior: smooth;
-}
-
-.letter .paper {
-  padding: 22px 20px 18px;
 }
 
 .letter h2 {
@@ -707,29 +707,6 @@ input:focus {
   color: rgba(255,255,255,.75);
   font-size: 13px;
   text-align: center;
-}
-
-/* =========================
-   ✅ FIX: rolagem funcionando 100% no letter (desktop + mobile)
-   cole no FINAL do CSS
-   ========================= */
-
-/* o letter inteiro vira uma área rolável "pegável" */
-.letter{
-  pointer-events: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  touch-action: pan-y;
-}
-
-/* elimina "zonas mortas": o conteúdo ocupa a altura do letter */
-.letter .paper{
-  min-height: 100%;
-}
-
-/* se por acaso algum elemento interno estiver pegando gesto, mantém o scroll funcionando */
-.letter, .letter *{
-  -webkit-tap-highlight-color: transparent;
 }
 
 /* ✅ importante: se você tiver body travado em algum momento,
